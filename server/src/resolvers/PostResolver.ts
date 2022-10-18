@@ -25,8 +25,8 @@ export class PostResolver {
     @Arg('username') CID: string,
     @Ctx() ctx: any
   ): Promise<Post | boolean> {
-    const user = await ctx.userRepo.findOne({where:{ username: CID }});
-    console.log(user)
+    const user = await ctx.userRepo.findOne({ where: { username: CID } });
+    console.log(user);
     if (user) {
       const newPost = await Post.create({
         title: tt,
@@ -42,15 +42,15 @@ export class PostResolver {
     return false;
   }
 
-  @Query(()=>User)
-  async PostOfOneUser(
-    @Ctx() ctx: any,
-    @Arg('username') un : string
-  ){
-    const user = await ctx.userRepo.findOne({ where : {username : un}, relations: {
-      postsWritten: true,
-    },});
-    console.log('postofoneuser', user)
+  @Query(() => User)
+  async PostOfOneUser(@Ctx() ctx: any, @Arg('username') un: string) {
+    const user = await ctx.userRepo.findOne({
+      where: { username: un },
+      relations: {
+        postsWritten: true,
+      },
+    });
+    console.log('postofoneuser', user);
     return user;
   }
 
@@ -59,5 +59,20 @@ export class PostResolver {
     const res: any = await ctx.postRepo.delete({});
     console.log(res);
     return true;
+  }
+  @Mutation(() => Boolean)
+  async deleteSinglePost(@Ctx() ctx: any, @Arg('id') id : number): Promise<boolean> {
+    try{
+    const res = await AppDataSource
+    .createQueryBuilder()
+    .delete()
+    .from(Post)
+    .where("id = :id", { id: id })
+    .execute()
+    console.log(res);
+    return true;
+    }catch(e : any){
+      return false;
+    }
   }
 }

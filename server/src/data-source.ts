@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
     port: 5432,
     username: "postgres",
     password: process.env.POSTGRES_PASSWORD,
-    database: "teebaydb",
+    database: "testorm",
     synchronize: true,
     logging: false,
     entities: [User, Post],
